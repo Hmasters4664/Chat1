@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:background="@color/black"
+    <item android:id="@+id/nav_1"
+
+        android:background="@color/black"
+        android:title="Register"/>
+    <item android:id="@+id/nav_2"
+
+        android:background="@color/black"
+        android:title="Log In"/>
+    <item android:id="@+id/nav_3"
+        android:background="@color/black"
+        android:title="Profile Picture"/>
+
+    <item android:id="@+id/nav_4"
+        android:background="@color/black"
+        android:title="Tinnect"/>
+
+</menu>

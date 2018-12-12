@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "690064994877",
+    "firebase_url": "https://business-5c307.firebaseio.com",
+    "project_id": "business-5c307",
+    "storage_bucket": "business-5c307.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:690064994877:android:f28522b9945ea514",
+        "android_client_info": {
+          "package_name": "com.example.olivier.businessapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "690064994877-kc0dc0idto070ga11qj1bsf39rnjfkmb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBL99C9It8i8VOjq492H2irhLCT55-F77Q"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
