@@ -44,6 +44,10 @@ public class TinnectActivity extends AppCompatActivity implements NfcAdapter.OnN
         message.setText("waiting");
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
         if(mNfcAdapter != null) {
+            byte[] payload = mFirebaseUser.getUid().getBytes(Charset.forName("UTF-8"));
+            NdefRecord record = NdefRecord.createMime("text/plain",payload);
+            mNdefMessage= new NdefMessage(record);
+            mNfcAdapter.setNdefPushMessage(mNdefMessage, this);
             //This will refer back to createNdefMessage for what it will send
             mNfcAdapter.setNdefPushMessageCallback(this, this);
 
@@ -104,8 +108,8 @@ public class TinnectActivity extends AppCompatActivity implements NfcAdapter.OnN
         super.onResume();
        // updateTextViews();
         if (mNfcAdapter != null)
-            mNfcAdapter.setNdefPushMessage(mNdefMessage, this);;
-        handleNfcIntent(getIntent());
+            mNfcAdapter.setNdefPushMessage(mNdefMessage, this);
+            handleNfcIntent(getIntent());
     }
 
 }
