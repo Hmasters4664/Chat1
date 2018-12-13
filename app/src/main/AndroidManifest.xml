@@ -52,14 +52,6 @@
 
         <activity android:name=".Objects.Activities.ImageEditor" />
         <activity android:name=".Objects.Activities.ProfileActivity" />
-        <activity android:name=".Objects.Activities.Base" />
-        <activity android:name=".Objects.Activities.TinnectActivity" android:launchMode="singleTask">
-            <intent-filter>
-            <action android:name="android.nfc.action.NDEF_DISCOVERED" />
-            <category android:name="android.intent.category.DEFAULT" />
-            <data android:mimeType="text/plain" />
-            </intent-filter>
-        </activity>
     </application>
 
 </manifest>
