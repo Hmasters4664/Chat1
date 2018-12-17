@@ -8,6 +8,7 @@ import android.nfc.NfcEvent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,7 +30,7 @@ public class TinnectActivity extends AppCompatActivity implements NfcAdapter.OnN
     FirebaseStorage storage;
     private StorageReference storageRef;
     private StorageReference storageReference;
-    private Button request;
+    private Button send;
     private Button recieve;
     private TextView message;
     private NfcAdapter mNfcAdapter;
@@ -42,16 +43,16 @@ public class TinnectActivity extends AppCompatActivity implements NfcAdapter.OnN
         setContentView(R.layout.activity_tinnect);
         message=(TextView)findViewById(R.id.message);
         message.setText("waiting");
+        send = (Button) findViewById(R.id.send);
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mFirebaseUser = mFirebaseAuth.getCurrentUser();
+
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
         if(mNfcAdapter != null) {
             byte[] payload = mFirebaseUser.getUid().getBytes(Charset.forName("UTF-8"));
             NdefRecord record = NdefRecord.createMime("text/plain",payload);
             mNdefMessage= new NdefMessage(record);
             mNfcAdapter.setNdefPushMessage(mNdefMessage, this);
-            //This will refer back to createNdefMessage for what it will send
-            mNfcAdapter.setNdefPushMessageCallback(this, this);
-
-            //This will be called if the message is sent successfully
             mNfcAdapter.setOnNdefPushCompleteCallback(this, this);
         }
         else {
@@ -59,6 +60,13 @@ public class TinnectActivity extends AppCompatActivity implements NfcAdapter.OnN
                     Toast.LENGTH_SHORT).show();
         }
         handleNfcIntent(getIntent());
+
+        send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //send();
+            }
+        });
     }
 
     @Override
@@ -70,11 +78,12 @@ public class TinnectActivity extends AppCompatActivity implements NfcAdapter.OnN
     public NdefMessage createNdefMessage(NfcEvent event) {
         byte[] payload = mFirebaseUser.getUid().getBytes(Charset.forName("UTF-8"));
         NdefRecord record = NdefRecord.createMime("text/plain",payload);
+        NdefRecord.createApplicationRecord(getPackageName());
         return new NdefMessage(record);
     }
 
     private void handleNfcIntent(Intent NfcIntent) {
-        if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(NfcIntent.getAction())) {
+        if ((NfcAdapter.ACTION_NDEF_DISCOVERED.equals(NfcIntent.getAction()))) {
             Parcelable[] receivedArray =
                     NfcIntent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
 
@@ -87,7 +96,7 @@ public class TinnectActivity extends AppCompatActivity implements NfcAdapter.OnN
                     String string = new String(record.getPayload());
                     //Make sure we don't pass along our AAR (Android Application Record)
                     //if (string.equals(getPackageName())) { continue; }
-                    message.setText(string);
+                    message.setText("sent");
 
                 }
             }
@@ -96,7 +105,10 @@ public class TinnectActivity extends AppCompatActivity implements NfcAdapter.OnN
             }
         }
     }
-
+     public void send()
+     {
+         mNfcAdapter.setNdefPushMessage(mNdefMessage, this,this);
+     }
 
     @Override
     public void onNewIntent(Intent intent) {
@@ -108,7 +120,7 @@ public class TinnectActivity extends AppCompatActivity implements NfcAdapter.OnN
         super.onResume();
        // updateTextViews();
         if (mNfcAdapter != null)
-            mNfcAdapter.setNdefPushMessage(mNdefMessage, this);
+           mNfcAdapter.setNdefPushMessage(mNdefMessage, this);
             handleNfcIntent(getIntent());
     }
 
