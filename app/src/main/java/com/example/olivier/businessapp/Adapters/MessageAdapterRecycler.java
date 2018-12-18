@@ -50,7 +50,7 @@ public class MessageAdapterRecycler extends RecyclerView.Adapter {
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
 
-        Collections.sort(this.bList, new Comparator<BaseMessage>() {
+       /* Collections.sort(this.bList, new Comparator<BaseMessage>() {
             @Override
             public int compare(BaseMessage z1, BaseMessage z2) {
                 if (z1.getTime() > z2.getTime())
@@ -59,7 +59,7 @@ public class MessageAdapterRecycler extends RecyclerView.Adapter {
                     return -1;
                 return 0;
             }
-        });
+        });*/
     }
 
     @Override
