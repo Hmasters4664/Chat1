@@ -119,8 +119,8 @@ public class MainActivity extends Base {
         });
 
         if (mFirebaseAuth.getInstance().getCurrentUser() != null) {
-            db.collection("Global")
-                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
+            db.collection("Global").orderBy("time",Query.Direction.ASCENDING)
+                   .limit(150).addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot snapshots,
                                             @Nullable FirebaseFirestoreException e) {
