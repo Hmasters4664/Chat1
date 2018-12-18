@@ -24,6 +24,8 @@ import com.google.firebase.storage.StorageReference;
 import java.io.File;
 import java.io.IOException;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class MessageAdapterRecycler extends RecyclerView.Adapter {
@@ -47,6 +49,17 @@ public class MessageAdapterRecycler extends RecyclerView.Adapter {
         this.bList=bList;
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
+
+        Collections.sort(this.bList, new Comparator<BaseMessage>() {
+            @Override
+            public int compare(BaseMessage z1, BaseMessage z2) {
+                if (z1.getTime() > z2.getTime())
+                    return 1;
+                if (z1.getTime() < z2.getTime())
+                    return -1;
+                return 0;
+            }
+        });
     }
 
     @Override
@@ -90,7 +103,7 @@ public class MessageAdapterRecycler extends RecyclerView.Adapter {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
     public class  SentMessageHolder  extends RecyclerView.ViewHolder{
 
-    TextView messageText, nameText;
+    TextView messageText, nameText, dateText;
         ImageView mImageView;
         public SentMessageHolder (View itemView) {
             super(itemView);
@@ -98,12 +111,13 @@ public class MessageAdapterRecycler extends RecyclerView.Adapter {
             nameText= (TextView) itemView.findViewById(R.id.text_message_name);
             messageText= (TextView) itemView.findViewById(R.id.text_message_body);
             mImageView =(ImageView)itemView.findViewById(R.id.img);
-
+            dateText = (TextView)itemView.findViewById(R.id.text_message_time);
         }
 
     void bind(BaseMessage message) {
         messageText.setText(message.getMessageText());
         nameText.setText(message.getDisplayname());
+        dateText.setText(message.getDate());
 
         // Format the stored timestamp into a readable String using method.
         //timeText.setText(Utils.formatDateTime(message.getCreatedAt()));

@@ -38,7 +38,9 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -188,6 +190,9 @@ public class MainActivity extends Base {
     public void send() {
         //Implement image click function
         String messageText = editText.getText().toString();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy-hh-mm-ss");
+        String format = simpleDateFormat.format(new Date());
+        long time= System.currentTimeMillis();
 
             /*if (editText.getText().toString().trim().equals("")) {
                 Toast.makeText(getActivity(), "Please input some text...", Toast.LENGTH_SHORT).show();
@@ -202,7 +207,7 @@ public class MainActivity extends Base {
             hf=true;
             hasfile="f";
         }
-        Long time = System.currentTimeMillis();
+        //Long time = System.currentTimeMillis();
        // String s = "T" + Objects.toString(time, null);
         String Sender = mFirebaseUser.getUid();
         //BaseMessage b =new BaseMessage(messageText,Sender,file_url,hasfile);
@@ -212,6 +217,8 @@ public class MainActivity extends Base {
         map.put("sender", Sender);
         map.put("hasfile", hf);
         map.put("displayname",mFirebaseUser.getDisplayName());
+        map.put("date",format);
+        map.put("time",time);
         db.collection("Global")
                 .add(map)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
