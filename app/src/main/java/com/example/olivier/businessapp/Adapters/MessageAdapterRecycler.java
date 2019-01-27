@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +43,10 @@ public class MessageAdapterRecycler extends RecyclerView.Adapter {
     private static final int VIEW_TYPE_MESSAGE_SENT = 1;
     private static final int VIEW_TYPE_MESSAGE_RECEIVED = 2;
     StorageReference islandRef = storage.getReference();
+    File Dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+    File docDir = new File(Dir, "TinDocs");
+    File image;
+     String LOG_TAG="Directory";
 
 
     public MessageAdapterRecycler( List<BaseMessage> bList)
@@ -49,6 +54,10 @@ public class MessageAdapterRecycler extends RecyclerView.Adapter {
         this.bList=bList;
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
+        if(!docDir.mkdirs())
+        {
+            Log.e(LOG_TAG, "Directory not created");
+        }
 
        /* Collections.sort(this.bList, new Comparator<BaseMessage>() {
             @Override
@@ -118,11 +127,11 @@ public class MessageAdapterRecycler extends RecyclerView.Adapter {
         messageText.setText(message.getMessageText());
         nameText.setText(message.getDisplayname());
         dateText.setText(message.getDate());
-
         // Format the stored timestamp into a readable String using method.
         //timeText.setText(Utils.formatDateTime(message.getCreatedAt()));
         if(message.getHasfile())
         {
+
             ImagesRef= islandRef.child("data/"+message.getFile_url());
             final long ONE_MEGABYTE = 1024 * 1024;
             ImagesRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
@@ -141,6 +150,24 @@ public class MessageAdapterRecycler extends RecyclerView.Adapter {
                 }
             });
 
+        } else
+        {
+            mImageView.setImageResource(0);
+            mImageView .setVisibility(View.GONE);
+        }
+
+    }
+    boolean check_file(String filename)
+    {
+        String f= filename + "jpg";
+
+        image=new File(docDir, f);
+        if(image.exists())
+        {
+            return true;
+        } else
+        {
+            return false;
         }
 
     }
