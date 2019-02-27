@@ -1,5 +1,6 @@
 package com.example.olivier.businessapp.Adapters;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
@@ -21,8 +22,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import java.util.Collections;
@@ -47,6 +50,7 @@ public class MessageAdapterRecycler extends RecyclerView.Adapter {
     File docDir = new File(Dir, "TinDocs");
     File image;
      String LOG_TAG="Directory";
+    private Context context;
 
 
     public MessageAdapterRecycler( List<BaseMessage> bList)
@@ -114,6 +118,7 @@ public class MessageAdapterRecycler extends RecyclerView.Adapter {
 
     TextView messageText, nameText, dateText;
         ImageView mImageView;
+       Context context;
         public SentMessageHolder (View itemView) {
             super(itemView);
            // mView=itemView;
@@ -121,6 +126,8 @@ public class MessageAdapterRecycler extends RecyclerView.Adapter {
             messageText= (TextView) itemView.findViewById(R.id.text_message_body);
             mImageView =(ImageView)itemView.findViewById(R.id.img);
             dateText = (TextView)itemView.findViewById(R.id.text_message_time);
+            context=itemView.getContext();
+
         }
 
     void bind(BaseMessage message) {
@@ -129,37 +136,24 @@ public class MessageAdapterRecycler extends RecyclerView.Adapter {
         dateText.setText(message.getDate());
         // Format the stored timestamp into a readable String using method.
         //timeText.setText(Utils.formatDateTime(message.getCreatedAt()));
-        if(message.getHasfile())
-        {
+        ///
+        boolean fileexists;
+        if(message.getHasfile()) {
 
-            ImagesRef= islandRef.child("data/"+message.getFile_url());
-            final long ONE_MEGABYTE = 1024 * 1024;
-            ImagesRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                @Override
-                public void onSuccess(byte[] bytes) {
-                    // Data for "images/island.jpg" is returns, use this as needed
+            Picasso.get()
+                    .load(message.getFile_url())
+                    .into(mImageView);
 
-                    Bitmap  bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                    mImageView.setImageBitmap(bitmap);
-                    mImageView .setVisibility(View.VISIBLE);
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    // Handle any errors
-                }
-            });
-
-        } else
-        {
+        }
+        else{
             mImageView.setImageResource(0);
-            mImageView .setVisibility(View.GONE);
+            mImageView.setVisibility(View.GONE);
         }
 
     }
     boolean check_file(String filename)
     {
-        String f= filename + "jpg";
+        String f= filename + ".jpg";
 
         image=new File(docDir, f);
         if(image.exists())

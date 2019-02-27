@@ -21,8 +21,11 @@ import android.widget.Toast;
 import com.example.olivier.businessapp.Adapters.MessageAdapterRecycler;
 import com.example.olivier.businessapp.Objects.Activities.Base;
 import com.example.olivier.businessapp.Objects.BaseMessage;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -251,38 +254,37 @@ public class MainActivity extends Base {
 
         if(files[num] != null)
         {
+            //todo save the file URL after uploading the file
             // final ProgressDialog progressDialog = new ProgressDialog(this.getContext());
             //progressDialog.setTitle("Uploading...");
             // progressDialog.show();
-            file_url = UUID.randomUUID().toString();
-            StorageReference storageRef = storageReference.child("data/"+file_url);
-            storageRef.putFile(files[num])
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            // progressDialog.dismiss();
-                            Toast.makeText(getBaseContext(), "Uploaded", Toast.LENGTH_SHORT).show();
-
+            final String s= UUID.randomUUID().toString();
+            final StorageReference storageRef = storageReference.child("data/"+s);
+            UploadTask uploadTask=storageRef.putFile(files[num]);
+                Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                    @Override
+                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                        if (!task.isSuccessful()) {
+                            throw task.getException();
                         }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            // progressDialog.dismiss();
-                            Toast.makeText(getBaseContext(), "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
 
+                        // Continue with the task to get the download URL
+                        return storageRef.getDownloadUrl();
+                    }
+                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Uri> task) {
+                        if (task.isSuccessful()) {
+                            Uri downloadUri = task.getResult();
+                            file_url=downloadUri.toString();
+                        } else {
+                            // Handle failures
+                            // ...
                         }
-                    })
-                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                            double progress = (100.0*taskSnapshot.getBytesTransferred()/taskSnapshot
-                                    .getTotalByteCount());
-                            //  progressDialog.setMessage("Uploaded "+(int)progress+"%");
-                        }
-                    });
+                    }
+                });
 
-        }
+            }
 
 
     }
