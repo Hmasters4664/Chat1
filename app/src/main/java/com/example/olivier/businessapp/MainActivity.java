@@ -259,6 +259,7 @@ public class MainActivity extends Base {
             //progressDialog.setTitle("Uploading...");
             // progressDialog.show();
             final String s= UUID.randomUUID().toString();
+            file_url=s;
             final StorageReference storageRef = storageReference.child("data/"+s);
             UploadTask uploadTask=storageRef.putFile(files[num]);
                 Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
@@ -276,7 +277,7 @@ public class MainActivity extends Base {
                     public void onComplete(@NonNull Task<Uri> task) {
                         if (task.isSuccessful()) {
                             Uri downloadUri = task.getResult();
-                            file_url=downloadUri.toString();
+
                         } else {
                             // Handle failures
                             // ...

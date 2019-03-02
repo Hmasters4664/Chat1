@@ -70,12 +70,12 @@ dependencies {
             {
                 exclude group: "com.android.support"
             }
-    implementation('com.firebaseui:firebase-ui-storage:4.1.0')
+    implementation('com.firebaseui:firebase-ui-storage:3.2.2')
             {
                 exclude group: "com.android.support"
             }
     implementation 'com.github.siyamed:android-shape-imageview:0.9.+@aar'
-    implementation 'com.squareup.picasso:picasso:2.71828'
 
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
 }
 apply plugin: 'com.google.gms.google-services'

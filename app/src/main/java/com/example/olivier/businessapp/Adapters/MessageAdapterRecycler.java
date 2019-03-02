@@ -13,9 +13,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.Registry;
+import com.bumptech.glide.annotation.GlideModule;
+import com.bumptech.glide.module.AppGlideModule;
 import com.example.olivier.businessapp.Objects.BaseMessage;
 import com.example.olivier.businessapp.Objects.Business;
 import com.example.olivier.businessapp.R;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,6 +33,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -137,31 +143,23 @@ public class MessageAdapterRecycler extends RecyclerView.Adapter {
         // Format the stored timestamp into a readable String using method.
         //timeText.setText(Utils.formatDateTime(message.getCreatedAt()));
         ///
+
         boolean fileexists;
         if(message.getHasfile()) {
-
-            Picasso.get()
-                    .load(message.getFile_url())
+            mImageView.setVisibility(View.VISIBLE);
+            StorageReference storageRef = storage.getReference();
+            StorageReference imagesRef = storageRef.child("data");
+            StorageReference spaceRef = storageRef.child("data/"+message.getFile_url());
+            GlideApp.with(context)
+                    .load(spaceRef)
                     .into(mImageView);
 
+
+            String Done="here";
         }
         else{
             mImageView.setImageResource(0);
             mImageView.setVisibility(View.GONE);
-        }
-
-    }
-    boolean check_file(String filename)
-    {
-        String f= filename + ".jpg";
-
-        image=new File(docDir, f);
-        if(image.exists())
-        {
-            return true;
-        } else
-        {
-            return false;
         }
 
     }
@@ -211,6 +209,8 @@ public class MessageAdapterRecycler extends RecyclerView.Adapter {
             return VIEW_TYPE_MESSAGE_RECEIVED;
         }
     }
+
+
 
 
 
