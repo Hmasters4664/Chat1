@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.olivier.businessapp.Adapters.GlideApp;
 import com.example.olivier.businessapp.Adapters.MessageAdapterRecycler;
 import com.example.olivier.businessapp.Objects.Activities.Base;
 import com.example.olivier.businessapp.Objects.BaseMessage;
@@ -75,6 +76,7 @@ public class MainActivity extends Base {
     private StorageReference storageRef;
     private StorageReference storageReference;
 
+
     private Uri filePath;
     private final int PICK_IMAGE_REQUEST = 71;
 
@@ -91,6 +93,7 @@ public class MainActivity extends Base {
         if(Build.VERSION.SDK_INT >=23 && !isPermissionGranted()){
             requestPermissions(PERMISSION_STORE,0);
         }
+
 
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
@@ -289,6 +292,8 @@ public class MainActivity extends Base {
 
 
     }
+
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

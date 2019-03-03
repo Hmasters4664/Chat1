@@ -11,14 +11,19 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.support.v7.widget.Toolbar;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.olivier.businessapp.Adapters.GlideApp;
 import com.example.olivier.businessapp.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.mikhaellopez.circularimageview.CircularImageView;
 
 public abstract class Base extends AppCompatActivity {
 
@@ -32,6 +37,10 @@ public abstract class Base extends AppCompatActivity {
     private NavigationView navigationView;
     private ActionBar actionbar;
     public FirebaseFirestore db;
+    private ImageView profilepic;
+    FirebaseStorage storage;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +54,7 @@ public abstract class Base extends AppCompatActivity {
 
             displayToolbar();
             displayDrawer();
+            SetPic();
 
 
 
@@ -81,6 +91,7 @@ public abstract class Base extends AppCompatActivity {
         setSupportActionBar(toolbar);
         actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
+
         actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
 
         navigationView.setNavigationItemSelectedListener(
@@ -161,6 +172,7 @@ public abstract class Base extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         String x="here";
+        SetPic();
         //do something
     }
 
@@ -176,7 +188,21 @@ public abstract class Base extends AppCompatActivity {
     public void onBackPressed() {
         moveTaskToBack(true);
     }
+////////////todo fix the set pic
+    void SetPic()
+    {
+        //db.collection("Users").document(mFirebaseUser.getUid()).get()
+        profilepic = (CircularImageView) navigationView.getHeaderView(0).findViewById(R.id.imageView3);
+        storage =FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+        StorageReference imagesRef = storageRef.child("Profile");
+        //db.collection("Users").document(mFirebaseUser.getUid())
+        StorageReference spaceRef = storageRef.child("Profile/"+mFirebaseUser.getUid()+".jpg");
+        GlideApp.with(this)
+                .load(spaceRef)
+                .into(profilepic);
 
+    }
 
 
 }

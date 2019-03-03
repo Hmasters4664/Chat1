@@ -24,6 +24,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -33,6 +34,10 @@ import com.mikhaellopez.circularimageview.CircularImageView;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ImageUpload extends AppCompatActivity {
     static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -51,7 +56,10 @@ public class ImageUpload extends AppCompatActivity {
     private StorageReference UserFilesRef;
     private FirebaseStorage storage;
     private String Profilepicture;
+    public FirebaseFirestore db;
     private Uri photoURI;
+    File Dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+    File docDir = new File(Dir, "TinDocs");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,9 +79,11 @@ public class ImageUpload extends AppCompatActivity {
             mFirebaseUser = mFirebaseAuth.getCurrentUser();
             storage = FirebaseStorage.getInstance();
             storageRef = storage.getReference();
-            Profilepicture =mFirebaseUser.getUid()+".jpg";
+            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            Profilepicture =mFirebaseUser.getUid()+"_"+timeStamp+".jpg";
             ProfilePicRef = storageRef.child(Profilepicture);
             UserFilesRef = storageRef.child("Profile"+"/"+Profilepicture);
+            db = FirebaseFirestore.getInstance();
         }
 
         if(Build.VERSION.SDK_INT >=23 && !isPermissionGranted()){
@@ -104,8 +114,9 @@ public class ImageUpload extends AppCompatActivity {
 
     private File createImageFile() throws IOException {
         // Create an image file name
-        String imageFileName = mFirebaseUser.getUid()+"_Profile";
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);;
+       // String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = mFirebaseUser.getUid();
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
                 ".jpg",         /* suffix */
@@ -134,7 +145,7 @@ public class ImageUpload extends AppCompatActivity {
             // Continue only if the File was successfully created
             if (photoFile != null) {
                  photoURI = FileProvider.getUriForFile(this,
-                        "com.example.android.fileprovider",
+                        this.getApplicationContext().getPackageName()+".provider",
                         photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
@@ -175,7 +186,7 @@ public class ImageUpload extends AppCompatActivity {
 
         Bitmap bitmap = ((BitmapDrawable) circularImageView.getDrawable()).getBitmap();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 40, baos);
         byte[] data = baos.toByteArray();
 
         UploadTask uploadTask = UserFilesRef.putBytes(data);
@@ -189,6 +200,10 @@ public class ImageUpload extends AppCompatActivity {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 Toast.makeText(ImageUpload.this, "Uploaded", Toast.LENGTH_SHORT).show();
+                Map<String, Object> map = new HashMap<>();
+                map.put("profile", Profilepicture);
+                db.collection("Users").document(mFirebaseUser.getUid()).update(map);
+
             }
         })
                     .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
