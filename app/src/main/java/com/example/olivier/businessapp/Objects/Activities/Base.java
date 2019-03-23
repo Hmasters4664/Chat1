@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.example.olivier.businessapp.Adapters.GlideApp;
 import com.example.olivier.businessapp.R;
+import com.example.olivier.businessapp.Userlist;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -120,9 +121,9 @@ public abstract class Base extends AppCompatActivity {
                                 startActivity(pic);
                                 break;
 
-                            case "Tinnect":
-                                Intent tin = new Intent(getBaseContext(), TinnectActivity.class);
-                                startActivity(tin);
+                            case "Chats":
+                                Intent chats = new Intent(getBaseContext(), Userlist.class);
+                                startActivity(chats);
                                 break;
                         }
 

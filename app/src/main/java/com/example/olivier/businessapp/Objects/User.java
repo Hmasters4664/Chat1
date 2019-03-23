@@ -38,9 +38,7 @@ public class User {
         this.Interest5=Interest5;
     }
 
-    public String getUserId() {
-        return UserID;
-    }
+
 
 
 
@@ -60,95 +58,66 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
-
-    public void setdisplayName(String displayName) {
-        this.DisplayName = displayName;
-    }
-
-    public void setUserId(String userId) {
-        this.UserID = userId;
-    }
-
     public String getProfile() {
         return profile;
     }
-
     public void setProfile(String image) {
         this.profile = image;
     }
-
     public String getAge() {
         return age;
     }
-
     public String getInterest1() {
         return Interest1;
     }
-
     public String getInterest2() {
         return Interest2;
     }
-
     public String getInterest3() {
         return Interest3;
     }
-
     public String getInterest4() {
         return Interest4;
     }
-
     public String getInterest5() {
         return Interest5;
     }
-
     public String getJobPosition() {
         return JobPosition;
     }
-
     public String getProfession() {
         return profession;
     }
-
     public String getUserID() {
         return UserID;
     }
-
     public void setAge(String age) {
         this.age = age;
     }
-
     public void setInterest1(String interest1) {
         Interest1 = interest1;
     }
-
     public void setDisplayName(String displayName) {
         DisplayName = displayName;
     }
-
     public void setInterest2(String interest2) {
         Interest2 = interest2;
     }
-
     public void setInterest3(String interest3) {
         Interest3 = interest3;
     }
-
     public void setInterest4(String interest4) {
         Interest4 = interest4;
     }
-
     public void setInterest5(String interest5) {
         Interest5 = interest5;
     }
-
     public void setJobPosition(String jobPosition) {
         JobPosition = jobPosition;
     }
-
     public void setProfession(String profession) {
         this.profession = profession;
     }
-
     public void setUserID(String userID) {
         UserID = userID;
     }

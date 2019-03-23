@@ -60,8 +60,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         public ViewHolder(View itemView) {
             super(itemView);
             mView=itemView;
-            uName= (TextView) mView.findViewById(R.id.name);
-            uLastM= (TextView) mView.findViewById(R.id.lastM);
+            uName= (TextView) mView.findViewById(R.id.FName);
+            uLastM= (TextView) mView.findViewById(R.id.Lname);
             mView.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
                     Context context = mView.getContext();

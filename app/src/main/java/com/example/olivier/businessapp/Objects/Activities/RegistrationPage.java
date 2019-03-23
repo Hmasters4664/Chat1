@@ -237,6 +237,7 @@ public class RegistrationPage extends AppCompatActivity {
         userz.put("Interest3",likes[2]);
         userz.put("Interest4",likes[3]);
         userz.put("Interest5",likes[4]);
+        userz.put("profile","x.jpg");
 
         //mDatabase.child("users").child(userId).child("username").setValue(name);
         //mDatabase.child("users").child(userId).child("GID").setValue(userId);
