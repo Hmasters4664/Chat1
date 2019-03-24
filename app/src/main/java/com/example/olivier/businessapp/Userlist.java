@@ -30,8 +30,8 @@ public class Userlist extends Base {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_userlist);
-        mRecyclerview= (RecyclerView)findViewById(R.id.reyclerview_user_list);
+        //setContentView(R.layout.activity_userlist);
+        mRecyclerview = findViewById(R.id.reyclerview_user_list);
         Uinfo= new ArrayList<>();
         userA= new UserAdapter(Uinfo);
 

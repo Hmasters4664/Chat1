@@ -17,6 +17,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.olivier.businessapp.MainActivity;
+import com.example.olivier.businessapp.Objects.ChatS;
 import com.example.olivier.businessapp.Objects.User;
 import com.example.olivier.businessapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -61,13 +62,13 @@ public class RegistrationPage extends AppCompatActivity {
         mAuth=FirebaseAuth.getInstance();
         setContentView(R.layout.activity_registration_page);
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        mSignUp = (Button)findViewById(R.id.btn_register);
-        mName = (EditText)findViewById(R.id.input_name);
-        mAge = (EditText)findViewById(R.id.input_age);
-        mGender = (EditText)findViewById(R.id.input_gender);
-        mProf= (EditText)findViewById(R.id.input_profession);
-        mJob = (EditText)findViewById(R.id.input_Job);
-        picker= (BubblePicker) findViewById(R.id.picker);
+        mSignUp = findViewById(R.id.btn_register);
+        mName = findViewById(R.id.input_name);
+        mAge = findViewById(R.id.input_age);
+        mGender = findViewById(R.id.input_gender);
+        mProf = findViewById(R.id.input_profession);
+        mJob = findViewById(R.id.input_Job);
+        picker = findViewById(R.id.picker);
 
         Bundle extras = getIntent().getExtras();
         if(extras !=null)
@@ -122,7 +123,7 @@ public class RegistrationPage extends AppCompatActivity {
             public void onBubbleSelected(@NotNull PickerItem item) {
                 if(count<5)
                 {
-                    likes[count]=item.getTitle().toString();
+                    likes[count] = item.getTitle();
                     count++;
                 }
                 else{
@@ -136,7 +137,7 @@ public class RegistrationPage extends AppCompatActivity {
                 if(count>0)
                 {
                     for(p=0;p<5;p++) {
-                        if (likes[p] == item.getTitle().toString())
+                        if (likes[p] == item.getTitle())
                         {
                             likes[p]="";
                         }
@@ -256,8 +257,28 @@ public class RegistrationPage extends AppCompatActivity {
                         Log.w(TAG, "Error writing document", e);
                     }
                 });
+        String roomID = userId + "_" + userId;
+        //ChatS room1= new ChatS(name,name,roomID);
 
+        Map<String, Object> chatz = new HashMap<>();
+        chatz.put("user1", name);
+        chatz.put("user2", name);
+        chatz.put("ChatID", roomID);
 
+        mFire.collection("Chats").document(userId).collection("OneToOne").document(roomID)
+                .set(chatz)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully written!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error writing document", e);
+                    }
+                });
 
     }
 }

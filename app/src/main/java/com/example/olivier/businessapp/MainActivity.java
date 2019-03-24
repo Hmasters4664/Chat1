@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,9 +17,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.olivier.businessapp.Adapters.GlideApp;
 import com.example.olivier.businessapp.Adapters.MessageAdapterRecycler;
 import com.example.olivier.businessapp.Objects.Activities.Base;
 import com.example.olivier.businessapp.Objects.BaseMessage;
@@ -33,14 +32,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.annotations.Nullable;
 import com.google.firebase.firestore.DocumentChange;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.core.OrderBy;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -97,26 +93,26 @@ public class MainActivity extends Base {
 
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
-        mRecyclerview= (RecyclerView)findViewById(R.id.reyclerview_message_list);
+        mRecyclerview = findViewById(R.id.reyclerview_message_list);
         binfo= new ArrayList<>();
         mLayoutManager = new LinearLayoutManager(getBaseContext());
         MessA= new MessageAdapterRecycler(binfo);
         mRecyclerview.setHasFixedSize(true);
         mRecyclerview.setNestedScrollingEnabled(false);
-        editText = (EditText) findViewById(R.id.msg_type);
+        editText = findViewById(R.id.msg_type);
         mRecyclerview.setLayoutManager(mLayoutManager);
         mRecyclerview.setAdapter(MessA);
         binfo.clear();
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
-        ImageView img = (ImageView)findViewById(R.id.send);
+        ImageView img = findViewById(R.id.send);
         img.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 send();
             }
         });
 
-        ImageView att = (ImageView)findViewById(R.id.attach);
+        ImageView att = findViewById(R.id.attach);
 
         att.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -124,7 +120,7 @@ public class MainActivity extends Base {
             }
         });
 
-        if (mFirebaseAuth.getInstance().getCurrentUser() != null) {
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             db.collection("Global").orderBy("time",Query.Direction.ASCENDING)
                    .limit(150).addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
@@ -170,14 +166,8 @@ public class MainActivity extends Base {
 
     private boolean isPermissionGranted(){
 
-        if(checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_GRANTED )
-        {
-            return true;
-        } else
-        {
-            return false;
-        }
+        return checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED;
 
     }
 
@@ -309,6 +299,7 @@ public class MainActivity extends Base {
         }
 
     }
+
 }
 
 

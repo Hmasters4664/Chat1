@@ -22,7 +22,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme2">
-        <activity android:name=".Userlist"></activity>
+        <activity android:name=".ChatList"></activity>
+        <activity android:name=".MainActivity$ChatList" />
+        <activity android:name=".SingleChat" />
+        <activity android:name=".Userlist" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

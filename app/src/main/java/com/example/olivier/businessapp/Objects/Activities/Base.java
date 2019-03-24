@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.olivier.businessapp.Adapters.GlideApp;
+import com.example.olivier.businessapp.ChatList;
 import com.example.olivier.businessapp.R;
 import com.example.olivier.businessapp.Userlist;
 import com.google.firebase.auth.FirebaseAuth;
@@ -65,10 +66,10 @@ public abstract class Base extends AppCompatActivity {
     void init()
     {
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
 
         navigationView = findViewById(R.id.nav_view);
-        mdrawer = (DrawerLayout) findViewById(R.id.dre_drawer);
+        mdrawer = findViewById(R.id.dre_drawer);
         //mFirebaseUser = mFirebaseAuth.getCurrentUser();
     }
 
@@ -81,7 +82,7 @@ public abstract class Base extends AppCompatActivity {
     void displayToolbar() {
 
         setSupportActionBar(toolbar);
-        header = (TextView) findViewById(R.id.headertext);
+        header = findViewById(R.id.headertext);
 
 
     }
@@ -121,8 +122,13 @@ public abstract class Base extends AppCompatActivity {
                                 startActivity(pic);
                                 break;
 
+                            case "Users":
+                                Intent users = new Intent(getBaseContext(), Userlist.class);
+                                startActivity(users);
+                                break;
+
                             case "Chats":
-                                Intent chats = new Intent(getBaseContext(), Userlist.class);
+                                Intent chats = new Intent(getBaseContext(), ChatList.class);
                                 startActivity(chats);
                                 break;
                         }
@@ -139,7 +145,7 @@ public abstract class Base extends AppCompatActivity {
     {
 
 
-        if (mFirebaseAuth.getInstance().getCurrentUser() == null) {
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
             Intent i = new Intent(getBaseContext(), LoginActivity.class);
             startActivity(i);
 
