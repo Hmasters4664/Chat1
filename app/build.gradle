@@ -77,5 +77,7 @@ dependencies {
     implementation 'com.github.siyamed:android-shape-imageview:0.9.+@aar'
 
     annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
+
+    implementation 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
 }
 apply plugin: 'com.google.gms.google-services'

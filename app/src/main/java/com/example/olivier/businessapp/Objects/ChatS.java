@@ -28,7 +28,7 @@ public class ChatS {
     }
 
     public void setUser2(String user2) {
-        this.user1 = user2;
+        this.user2 = user2;
     }
 
     public String getChatID() {
