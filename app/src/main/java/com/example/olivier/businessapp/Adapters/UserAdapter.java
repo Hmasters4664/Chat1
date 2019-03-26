@@ -1,6 +1,7 @@
 package com.example.olivier.businessapp.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 
 import com.example.olivier.businessapp.Objects.User;
 import com.example.olivier.businessapp.R;
+import com.example.olivier.businessapp.SingleChat;
 
 import java.util.List;
 
@@ -66,6 +68,16 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                 @Override public void onClick(View v) {
                     Context context = mView.getContext();
                     ////fill out on click
+
+                    int g=getAdapterPosition();
+                    String text=uList.get(g).getUserID();
+                    String name=uList.get(g).getDisplayName();
+                    Intent i = new Intent(context, SingleChat.class);
+                    i.putExtra("key",text);
+                    i.putExtra("MY_KEY",1);
+                    i.putExtra("name",name);
+                    context.startActivity(i);
+
                 }
             });
 

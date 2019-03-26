@@ -76,6 +76,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
                 public void onClick(View v) {
                     Context context = mView.getContext();
                     ////fill out on click
+
                 }
             });
 
