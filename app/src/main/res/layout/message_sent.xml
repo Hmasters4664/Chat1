@@ -45,18 +45,29 @@
 
     <ImageView
         android:id="@+id/img"
-        android:layout_width="150dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="20dp"
         android:adjustViewBounds="true"
         android:layout_marginEnd="8dp"
         android:visibility="gone"
+        android:src="@drawable/noimage"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_message_body"
         tools:srcCompat="@tools:sample/avatars" />
+
+    <com.github.barteksc.pdfviewer.PDFView
+        android:id="@+id/docView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_message_body"
+        android:visibility="gone"/>
 
 
 </android.support.constraint.ConstraintLayout>

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -21,6 +22,7 @@ import com.example.olivier.businessapp.Objects.BaseMessage;
 import com.example.olivier.businessapp.Objects.Business;
 import com.example.olivier.businessapp.R;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.github.barteksc.pdfviewer.PDFView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,6 +36,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -124,6 +127,7 @@ public class MessageAdapterRecycler extends RecyclerView.Adapter {
 
     TextView messageText, nameText, dateText;
         ImageView mImageView;
+       PDFView pdfview;
        Context context;
         public SentMessageHolder (View itemView) {
             super(itemView);
@@ -132,6 +136,7 @@ public class MessageAdapterRecycler extends RecyclerView.Adapter {
             messageText= (TextView) itemView.findViewById(R.id.text_message_body);
             mImageView =(ImageView)itemView.findViewById(R.id.img);
             dateText = (TextView)itemView.findViewById(R.id.text_message_time);
+            pdfview = itemView.findViewById(R.id.docView);
             context=itemView.getContext();
 
         }
@@ -146,20 +151,76 @@ public class MessageAdapterRecycler extends RecyclerView.Adapter {
 
         boolean fileexists;
         if(message.getHasfile()) {
-            mImageView.setVisibility(View.VISIBLE);
-            StorageReference storageRef = storage.getReference();
-            StorageReference imagesRef = storageRef.child("data");
-            StorageReference spaceRef = storageRef.child("data/"+message.getFile_url());
-            GlideApp.with(context)
-                    .load(spaceRef)
-                    .into(mImageView);
+            if (message.getFileType().equals("IMG")) {
+                mImageView.setVisibility(View.VISIBLE);
+                StorageReference storageRef = storage.getReference();
+                StorageReference imagesRef = storageRef.child("data");
+                StorageReference spaceRef = storageRef.child("data/" + message.getFile_url());
+                GlideApp.with(context)
+                        .load(spaceRef)
+                        .into(mImageView);
+
+            }
+            else if (message.getFileType().equals("PDF")) {
+                pdfview.setVisibility(View.VISIBLE);
+                String path = Environment.getExternalStorageDirectory().toString();
+                File file = new File(path,message.getFile_url());
+                StorageReference storageRef = storage.getReference();
+                StorageReference imagesRef = storageRef.child("data");
+                StorageReference spaceRef = storageRef.child("data/" + message.getFile_url());
+
+                if(file.exists())
+                {
+                    pdfview.fromFile(file).load();
+
+
+
+                } else {
+                    final String img = message.getFile_url();
+                    final long TWO_MEGABYTE = 1024 * 1024;
+
+                    spaceRef.getBytes(TWO_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                        @Override
+                        public void onSuccess(byte[] bytes) {
+                            // Data for "images/island.jpg" is returns, use this as needed
+                            String path = Environment.getExternalStorageDirectory().toString();
+
+
+                            OutputStream fOut = null;
+                             File file = new File(path,img); //
+                            try {
+                                fOut = new FileOutputStream(file);
+                                fOut.flush();
+                                fOut.close();
+
+
+                            } catch(Exception e){
+                                e.printStackTrace();
+                            }
+
+                            pdfview.fromFile(file).load();
+
+
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            // Handle any errors
+                            exception.printStackTrace();
+                        }
+                    });
+                }
+
+
+            }
 
 
             String Done="here";
         }
         else{
-            mImageView.setImageResource(0);
-            mImageView.setVisibility(View.GONE);
+            mImageView.setImageResource(R.drawable.noimage);
+            //mImageView.setVisibility(View.GONE);
+            //pdfview.setVisibility(View.GONE);
         }
 
     }

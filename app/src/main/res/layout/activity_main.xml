@@ -77,26 +77,17 @@
 
             <LinearLayout
                 android:id="@+id/msg"
-                android:layout_width="336dp"
+                android:layout_width="match_parent"
+                android:background="@color/OrangeLight"
                 android:layout_height="wrap_content"
                 android:layout_alignStart="@+id/send_bar"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:orientation="horizontal">
 
-                <ImageView
-                    android:id="@+id/smiley"
-                    android:layout_width="30dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginRight="20dp"
-                    android:src="@mipmap/smiley">
-
-                </ImageView>
-
                 <EditText
                     android:id="@+id/msg_type"
-                    android:layout_width="303dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_toLeftOf="@+id/btn_chat_send"
@@ -112,22 +103,32 @@
                     android:padding="10dp">
 
                     <ImageView
-                        android:id="@+id/attach"
-                        android:layout_width="40dp"
-                        android:layout_height="wrap_content"
+                        android:id="@+id/imagesend"
+                        android:layout_width="38dp"
+                        android:layout_height="42dp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginRight="1dp"
-                        android:src="@drawable/ic_shortcut_attach_file">
+                        android:src="@drawable/baseline_add_photo_alternate_24">
+
+                    </ImageView>
+
+                    <ImageView
+                        android:id="@+id/attach"
+                        android:layout_width="39dp"
+                        android:layout_height="44dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="1dp"
+                        android:src="@drawable/baseline_attach_file_24">
 
                     </ImageView>
 
                     <ImageView
                         android:id="@+id/send"
-                        android:layout_width="40dp"
-                        android:layout_height="wrap_content"
+                        android:layout_width="36dp"
+                        android:layout_height="51dp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginRight="20dp"
-                        android:src="@drawable/ic_shortcut_send">
+                        android:src="@drawable/baseline_send_24">
 
                     </ImageView>
 

@@ -9,6 +9,7 @@ public class BaseMessage {
     private String sender,displayname,date;
     private boolean myMessage;
     private boolean hasfile;
+    private String fileType;
     private long time;
 
     public BaseMessage()
@@ -16,7 +17,8 @@ public class BaseMessage {
 
     }
 
-    public BaseMessage(String messageText, String sender, String file_url, boolean hasfile, String display,String date, long time){
+    public BaseMessage(String messageText, String sender, String file_url, boolean hasfile,
+                       String display,String date, long time, String fileType ){
         this.messageText=messageText;
         this.file_url=file_url;
         this.sender=sender;
@@ -25,6 +27,7 @@ public class BaseMessage {
         this.displayname=display;
         this.date=date;
         this.time=time;
+        this.fileType = fileType;
     }
     public BaseMessage(String messageText, String sender, String file_url,boolean myMessage , boolean hasfile, String display, String date, long time){
         this.messageText=messageText;
@@ -35,6 +38,14 @@ public class BaseMessage {
         this.displayname=display;
         this.date=date;
         this.time=time;
+    }
+
+    public String getFileType() {
+        return fileType;
+    }
+
+    public void setFileType(String fileType) {
+        this.fileType = fileType;
     }
 
     public String getFile_url() {

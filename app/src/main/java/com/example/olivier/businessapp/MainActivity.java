@@ -67,10 +67,14 @@ public class MainActivity extends Base {
     private String file_url="";
     String hasfile="f";
     Uri[] files = new Uri[4];
+    private String filetype;
     int count=0;
     FirebaseStorage storage;
     private StorageReference storageRef;
     private StorageReference storageReference;
+    private ImageView img;
+    private ImageView att;
+    private ImageView pic;
 
 
     private Uri filePath;
@@ -105,18 +109,28 @@ public class MainActivity extends Base {
         binfo.clear();
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
-        ImageView img = findViewById(R.id.send);
+        img = findViewById(R.id.send);
         img.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 send();
             }
         });
 
-        ImageView att = findViewById(R.id.attach);
+        att = findViewById(R.id.attach);
 
-        att.setOnClickListener(new View.OnClickListener() {
+        pic = findViewById(R.id.imagesend);
+
+        pic.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 chooseImage();
+            }
+        });
+
+        att.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chooseFile();
+
             }
         });
 
@@ -187,31 +201,29 @@ public class MainActivity extends Base {
 
     public void send() {
         //Implement image click function
+
+        String t= hasfile;
+
+        if(hasfile.equals("t"))
+        {
+            uploadImage(0);
+            hasfile="f";
+        } else{
+            plainsend(false);
+        }
+
+    }
+
+    public void plainsend(Boolean hf){
         String messageText = editText.getText().toString();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy-hh-mm-ss");
         String format = simpleDateFormat.format(new Date());
         long time= System.currentTimeMillis();
-
-            /*if (editText.getText().toString().trim().equals("")) {
-                Toast.makeText(getActivity(), "Please input some text...", Toast.LENGTH_SHORT).show();
-            } else {*/
-        //if (!messageText.equals("")) {
-        //hasfile="f";
-        String t= hasfile;
-        boolean hf=false;
-        if(hasfile.equals("t"))
-        {
-            uploadImage(0);
-            hf=true;
-            hasfile="f";
-        }
-        //Long time = System.currentTimeMillis();
-       // String s = "T" + Objects.toString(time, null);
         String Sender = mFirebaseUser.getUid();
-        //BaseMessage b =new BaseMessage(messageText,Sender,file_url,hasfile);
         Map<String, Object> map = new HashMap<>();
         map.put("file_url", file_url);
         map.put("messageText", messageText);
+        map.put("fileType",filetype);
         map.put("sender", Sender);
         map.put("hasfile", hf);
         map.put("displayname",mFirebaseUser.getDisplayName());
@@ -223,6 +235,8 @@ public class MainActivity extends Base {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG, "DocumentSnapshot successfully written!");
+                        file_url = "";
+                        filetype = "";
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -233,17 +247,31 @@ public class MainActivity extends Base {
                 });
 
 
+
     }
+
 
     private void chooseImage() {
         Intent intent = new Intent();
+        filetype = "IMG";
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+        startActivityForResult(Intent.createChooser(intent, "Select Image"), PICK_IMAGE_REQUEST);
+    }
+
+    private void chooseFile() {
+        Intent intent = new Intent();
+        filetype = "PDF";
+        intent.setType("application/pdf");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select File"), PICK_IMAGE_REQUEST);
     }
 
     private void uploadImage(int num) {
-
+        String messageText = editText.getText().toString();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy-hh-mm-ss");
+        String format = simpleDateFormat.format(new Date());
+        long time= System.currentTimeMillis();
 
         if(files[num] != null)
         {
@@ -252,8 +280,15 @@ public class MainActivity extends Base {
             //progressDialog.setTitle("Uploading...");
             // progressDialog.show();
             final String s= UUID.randomUUID().toString();
-            file_url=s;
-            final StorageReference storageRef = storageReference.child("data/"+s);
+            if(filetype.equals("PDF"))
+            {
+                file_url=s+".pdf";
+            } else {
+                file_url = s;
+            }
+
+
+            final StorageReference storageRef = storageReference.child("data/"+file_url);
             UploadTask uploadTask=storageRef.putFile(files[num]);
                 Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                     @Override
@@ -270,6 +305,7 @@ public class MainActivity extends Base {
                     public void onComplete(@NonNull Task<Uri> task) {
                         if (task.isSuccessful()) {
                             Uri downloadUri = task.getResult();
+                            plainsend(true);
 
                         } else {
                             // Handle failures
