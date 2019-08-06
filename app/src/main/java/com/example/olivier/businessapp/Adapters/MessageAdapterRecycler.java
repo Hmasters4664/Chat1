@@ -162,7 +162,7 @@ public class MessageAdapterRecycler extends RecyclerView.Adapter {
 
             }
             else if (message.getFileType().equals("PDF")) {
-                pdfview.setVisibility(View.VISIBLE);
+
                 String path = Environment.getExternalStorageDirectory().toString();
                 File file = new File(path,message.getFile_url());
                 StorageReference storageRef = storage.getReference();
@@ -171,9 +171,9 @@ public class MessageAdapterRecycler extends RecyclerView.Adapter {
 
                 if(file.exists())
                 {
+
                     pdfview.fromFile(file).load();
-
-
+                    pdfview.setVisibility(View.VISIBLE);
 
                 } else {
                     final String img = message.getFile_url();
@@ -190,7 +190,8 @@ public class MessageAdapterRecycler extends RecyclerView.Adapter {
                              File file = new File(path,img); //
                             try {
                                 fOut = new FileOutputStream(file);
-                                fOut.flush();
+                                fOut.write(bytes);
+                                //fOut.flush();
                                 fOut.close();
 
 
@@ -199,6 +200,7 @@ public class MessageAdapterRecycler extends RecyclerView.Adapter {
                             }
 
                             pdfview.fromFile(file).load();
+                            pdfview.setVisibility(View.VISIBLE);
 
 
                         }
@@ -219,8 +221,8 @@ public class MessageAdapterRecycler extends RecyclerView.Adapter {
         }
         else{
             mImageView.setImageResource(R.drawable.noimage);
-            //mImageView.setVisibility(View.GONE);
-            //pdfview.setVisibility(View.GONE);
+            mImageView.setVisibility(View.GONE);
+            pdfview.setVisibility(View.GONE);
         }
 
     }
